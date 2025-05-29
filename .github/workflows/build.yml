@@ -16,7 +16,7 @@ jobs:
       - name: Build Docker image
         run: |
           echo "FILE_DATE=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-          docker build --network host . -f Dockerfile -t tailscale-derper-build
+          docker --debug build --network host . -f Dockerfile -t tailscale-derper-build
 
 
       - name: Save Docker image
