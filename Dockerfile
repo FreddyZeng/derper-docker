@@ -1,5 +1,8 @@
 FROM golang:latest AS builder
 
+ENV TZ=America/Los_Angeles
+
+
 WORKDIR /app
 
 # 参数化源码仓库和分支
@@ -27,9 +30,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends apt-utils && \
-    apt-get install -y ca-certificates && \
+    apt-get install -y ca-certificates tzdata && \
     mkdir /app/certs
 
+ENV TZ=America/Los_Angeles
 ENV DERP_DOMAIN=your-hostname.com
 ENV DERP_CERT_MODE=letsencrypt
 ENV DERP_CERT_DIR=/app/certs
