@@ -1,0 +1,32 @@
+name: Docker Build on derp
+
+on:
+  push:
+    branches:
+      - master     # 当 master 分支有推送时触发
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          echo "FILE_DATE=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+          docker build --network host . -f Dockerfile -t tailscale-derper-build
+
+
+      - name: Save Docker image
+        run: |
+          docker save tailscale-derper-build \
+            | gzip > $GITHUB_WORKSPACE/tailscale-derper-build.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@master
+        if: ${{ ! cancelled() }}
+        with:
+          name: ${{ env.FILE_DATE }}tailscale-derper-build.tar.gz
+          path: tailscale-derper-build.tar.gz
