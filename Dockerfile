@@ -42,16 +42,7 @@ ENV DERP_VERIFY_CLIENT_URL=""
 
 COPY --from=builder /usr/local/bin/derper .
 
-ENTRYPOINT ["/app/derper"]
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-CMD [
-    "--hostname",    "$DERP_DOMAIN",
-    "--certmode",    "$DERP_CERT_MODE",
-    "--certdir",     "$DERP_CERT_DIR",
-    "--a",           "$DERP_ADDR",
-    "--stun",        "$DERP_STUN",
-    "--stun-port",   "$DERP_STUN_PORT",
-    "--http-port",   "$DERP_HTTP_PORT",
-    "--verify-clients",    "$DERP_VERIFY_CLIENTS",
-    "--verify-client-url", "$DERP_VERIFY_CLIENT_URL"
-]
+ENTRYPOINT ["/app/entrypoint.sh"]
