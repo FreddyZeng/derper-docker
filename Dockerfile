@@ -1,8 +1,24 @@
 FROM golang:latest AS builder
+
 WORKDIR /app
 
-ARG DERP_VERSION=latest
-RUN go install tailscale.com/cmd/derper@${DERP_VERSION}
+# 参数化源码仓库和分支
+ARG DERP_REPO=https://github.com/FreddyZeng/tailscale-1.82.5.git
+ARG DERP_BRANCH=main
+
+# 克隆指定版本源码
+RUN git clone --branch ${DERP_BRANCH} ${DERP_REPO} tailscale-src
+
+# 切换到 derper 源码目录
+WORKDIR /app/tailscale-src/cmd/derper
+
+# Release 构建 derper，去除调试信息
+RUN go build -trimpath -ldflags="-s -w" -o /usr/local/bin/derper
+
+# 验证是否可执行（可选）
+RUN /usr/local/bin/derper --help
+
+
 
 FROM ubuntu
 WORKDIR /app
@@ -24,7 +40,7 @@ ENV DERP_HTTP_PORT 80
 ENV DERP_VERIFY_CLIENTS false
 ENV DERP_VERIFY_CLIENT_URL ""
 
-COPY --from=builder /go/bin/derper .
+COPY --from=builder /usr/local/bin/derper .
 
 CMD /app/derper --hostname=$DERP_DOMAIN \
     --certmode=$DERP_CERT_MODE \
