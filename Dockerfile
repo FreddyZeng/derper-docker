@@ -43,7 +43,7 @@ ENV DERP_STUN_PORT=3478
 ENV DERP_HTTP_PORT=80
 ENV DERP_VERIFY_CLIENTS=false
 ENV DERP_VERIFY_CLIENT_URL=""
-ENV DERP_CUSTOM_CONFIG_PATH=
+ENV DERP_CUSTOM_CONFIG_PATH="/app/derpCustonConfig/derpCustonConfig.json"
 
 COPY --from=builder /usr/local/bin/derper .
 
