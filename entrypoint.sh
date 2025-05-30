@@ -9,6 +9,6 @@ exec /app/derper \
     --http-port "$DERP_HTTP_PORT" \
     --verify-clients "$DERP_VERIFY_CLIENTS" \
     --verify-client-url "$DERP_VERIFY_CLIENT_URL" \
-    --customConfigPath "$DERP_CUSTOM_CONFIG_PATH" \
+    --custom-config-path "$DERP_CUSTOM_CONFIG_PATH" \
     "$@"
 
